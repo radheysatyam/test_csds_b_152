@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">  
+</head>
+<body>
+    <div class="container">
+        <h2>Random Joke Generator</h2>
+        <div class="joke-display" id="jokeText">Press the button for a joke!</div>
+        <div class="character-count">Character count: <span id="charCount">0</span></div>
+        <div class="button-container">
+            <button class="get-joke" onclick="getJoke()">Get Joke</button>
+            <button class="clear-joke" onclick="clearJoke()">Clear Joke</button>
+        </div>
+    </div>
+
+    <script>
+        async function getJoke() {
+            try {
+                const response = await fetch('https://v2.jokeapi.dev/joke/Any');
+                const data = await response.json();
+                
+                let jokeText = '';
+                if (data.type === 'single') {
+                    jokeText = data.joke;
+                } else if (data.type === 'twopart') {
+                    jokeText = `${data.setup}\n${data.delivery}`;
+                }
+                
+                document.getElementById('jokeText').textContent = jokeText;
+                document.getElementById('charCount').textContent = jokeText.length;
+            } catch (error) {
+                document.getElementById('jokeText').textContent = 'Failed to fetch joke. Please try again!';
+                document.getElementById('charCount').textContent = '0';
+            }
+        }
+
+        function clearJoke() {
+            document.getElementById('jokeText').textContent = 'Press the button for a joke!';
+            document.getElementById('charCount').textContent = '0';
+        }
+    </script>
+</body>
+</html>
